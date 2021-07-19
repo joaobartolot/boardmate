@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "14983942059",
+    "project_id": "boardmate-ee67c",
+    "storage_bucket": "boardmate-ee67c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:14983942059:android:5e503bea2fd95ecf99ccee",
+        "android_client_info": {
+          "package_name": "com.bartolot.boardmate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "14983942059-focs783mco2qdqessa4staqedphd2gnl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOLQ7wsgKJAi-KP_s67YSJtwvyXaB-olA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "14983942059-focs783mco2qdqessa4staqedphd2gnl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
