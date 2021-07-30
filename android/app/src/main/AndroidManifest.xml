@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.boardmate">
+    package="com.bartolot.boardmate">
    <application
         android:label="boardmate"
         android:icon="@mipmap/ic_launcher">

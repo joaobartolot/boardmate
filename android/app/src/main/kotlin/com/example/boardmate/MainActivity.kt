@@ -1,4 +1,4 @@
-package com.example.boardmate
+package com.bartolot.boardmate
 
 import io.flutter.embedding.android.FlutterActivity
 
