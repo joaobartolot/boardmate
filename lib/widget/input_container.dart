@@ -17,8 +17,8 @@ class InputContainer extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.5),
           decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.black38),
+            color: Theme.of(context).inputDecorationTheme.fillColor,
+            border: Border.all(color: Theme.of(context).dividerColor),
             borderRadius: BorderRadius.circular(10),
           ),
           child: this.child,

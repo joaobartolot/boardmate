@@ -23,6 +23,11 @@
     <meta name="apple-mobile-web-app-title" content="boardmate" />
     <link rel="apple-touch-icon" href="icons/Icon-192.png" />
 
+    <meta
+      name="google-signin-client_id"
+      content="14983942059-focs783mco2qdqessa4staqedphd2gnl.apps.googleusercontent.com"
+    />
+
     <title>boardmate</title>
     <link rel="manifest" href="manifest.json" />
   </head>
@@ -94,13 +99,22 @@
         loadMainDartJs();
       }
     </script>
+
+    <script src="/__/firebase/8.7.1/firebase-app.js"></script>
+    <script src="/__/firebase/8.7.1/firebase-firestore.js"></script>
+    <script src="/__/firebase/8.7.1/firebase-auth.js"></script>
+    <script src="/__/firebase/8.7.1/firebase-analytics.js"></script>
+
     <!-- The core Firebase JS SDK is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-firestore.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script> -->
 
     <!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-analytics.js"></script>
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-analytics.js"></script> -->
 
     <script>
       // Your web app's Firebase configuration

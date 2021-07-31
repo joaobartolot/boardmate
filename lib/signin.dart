@@ -16,11 +16,10 @@ class SigninPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () =>
-                        AuthenticationService.signInWithGoogle().then(
-                      (value) =>
-                          Navigator.of(context).pushReplacementNamed('/'),
-                    ),
+                    onPressed: () => AuthService().signInWithGoogle().then(
+                          (value) =>
+                              Navigator.of(context).pushReplacementNamed('/'),
+                        ),
                     child: Text('Sign in with Google'),
                   ),
                 ],

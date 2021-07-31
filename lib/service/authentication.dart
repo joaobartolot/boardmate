@@ -1,41 +1,35 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class AuthenticationService {
-  static Future<User?> signInWithGoogle() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? user;
+class AuthService {
+  final FirebaseAuth _firebaseAuth;
+  final GoogleSignIn _googleSignIn;
 
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+  AuthService({FirebaseAuth? firebaseAuth, GoogleSignIn? googleSignin})
+      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+        _googleSignIn = googleSignin ?? GoogleSignIn();
 
-    final GoogleSignInAccount? googleSignInAccount =
-        await googleSignIn.signIn();
+  Future<User?> signInAnonymously() async {
+    final authResult = await _firebaseAuth.signInAnonymously();
+    return authResult.user;
+  }
 
-    if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount.authentication;
+  Future<User?> signInWithGoogle() async {
+    final googleUser = await _googleSignIn.signIn();
+    final googleAuth = await googleUser!.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    final authResult = await _firebaseAuth.signInWithCredential(credential);
+    return authResult.user;
+  }
 
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
+  Future<void> signOut() async {
+    return _firebaseAuth.signOut();
+  }
 
-      try {
-        final UserCredential userCredential =
-            await auth.signInWithCredential(credential);
-
-        user = userCredential.user;
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'account-exists-with-different-credential') {
-          // handle the error here
-        } else if (e.code == 'invalid-credential') {
-          // handle the error here
-        }
-      } catch (e) {
-        // handle the error here
-      }
-    }
-
-    return user;
+  User? currentUser() {
+    return _firebaseAuth.currentUser;
   }
 }

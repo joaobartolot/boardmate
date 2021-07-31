@@ -20,8 +20,27 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
+        brightness: Brightness.light,
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          color: Colors.white,
+          elevation: 0,
+        ),
       ),
+      // TODO: Ajust the colors of the dark theme
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Color(0xff003566),
+        scaffoldBackgroundColor: Color(0xff000814),
+        backgroundColor: Color(0xff000814),
+        cardColor: Color(0xff001329),
+        appBarTheme: AppBarTheme(
+          color: Color(0xff000814),
+          elevation: 0,
+        ),
+      ),
+      themeMode: ThemeMode.light,
       initialRoute: FirebaseAuth.instance.currentUser == null ? '/signin' : '/',
       routes: {
         '/': (context) => HomePage(),
