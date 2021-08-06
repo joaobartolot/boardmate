@@ -19,14 +19,21 @@ class MatchService {
 
   static Stream<List<Match>> getAllMatches() {
     return _matchCollection
+        .orderBy('createdAt', descending: true)
         .where('userUid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .snapshots()
-        .map(
-          (event) => event.docs
-              .map(
-                (e) => Match.fromFirestore(e),
-              )
-              .toList(),
-        );
+        .map((event) => event.docs.map((e) => Match.fromFirestore(e)).toList());
+  }
+
+  static Stream<List<String>> getMatchesIds() {
+    return _matchCollection
+        .orderBy('createdAt', descending: true)
+        .where('userUid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .snapshots()
+        .map((event) => event.docs.map((e) => e.id).toList());
+  }
+
+  static Future<void> deleteMatch(String id) async {
+    await _matchCollection.doc(id).delete();
   }
 }

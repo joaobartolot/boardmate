@@ -8,6 +8,10 @@
             "name": "boardmate",
             "request": "launch",
             "type": "dart",
+            "args": [
+                "--web-port",
+                "5000"
+            ]
         },
         {
             "name": "boardmate (profile mode)",

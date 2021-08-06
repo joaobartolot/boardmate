@@ -44,4 +44,18 @@ class Match {
       'createdAt': this.createdAt,
     };
   }
+
+  String playersToString() {
+    String playersStr = "";
+
+    for (int i = 0; i < players.length; i++) {
+      playersStr += players[i];
+
+      if (i != players.length - 1) {
+        playersStr += ", ";
+      }
+    }
+
+    return playersStr;
+  }
 }

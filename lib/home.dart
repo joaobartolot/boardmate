@@ -1,7 +1,10 @@
 import 'package:boardmate/model/game.dart';
 import 'package:boardmate/model/match.dart';
+import 'package:boardmate/provider/match_card.dart';
 import 'package:boardmate/service/game.dart';
 import 'package:boardmate/service/match.dart';
+import 'package:boardmate/widget/match_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +19,7 @@ class HomePage extends StatelessWidget {
         actions: [
           InkWell(
             borderRadius: BorderRadius.circular(99.0),
-            onTap: () => print('object'),
+            onTap: () => print('object'), // TODO: implement a menu button
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
@@ -70,31 +73,24 @@ class HomePage extends StatelessWidget {
                           value: MatchService.getAllMatches(),
                           initialData: [],
                           builder: (context, _) {
-                            List<Match> matchList =
-                                Provider.of<List<Match>>(context);
-                            return ListView.builder(
-                              itemCount: matchList.length,
-                              itemBuilder: (context, index) =>
-                                  StreamProvider.value(
-                                value: GameService.getGame(
-                                    matchList[index].gameId),
-                                initialData:
-                                    Game(id: '', name: '', timesPlayed: 0),
-                                builder: (context, child) {
-                                  Game game = Provider.of<Game>(context);
-                                  return Card(
-                                      elevation: 2,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(game.name),
-                                          ],
-                                        ),
-                                      ));
-                                },
+                            List<Match> matches = context.watch<List<Match>>();
+                            if (matches.length > 0)
+                              return ListView.builder(
+                                itemCount: matches.length,
+                                itemBuilder: (context, index) =>
+                                    ChangeNotifierProvider(
+                                  create: (context) =>
+                                      MatchCardProvider(matches[index]),
+                                  builder: (context, _) => MatchCard(
+                                    match: matches[index],
+                                  ),
+                                ),
+                              );
+                            return Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'There is no matches...\nPlease add a match by clicking the + buttom above!',
+                                textAlign: TextAlign.center,
                               ),
                             );
                           },
