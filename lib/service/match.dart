@@ -10,6 +10,10 @@ class MatchService {
     return _matchCollection.add(match.toMap()).asStream();
   }
 
+  static Stream<void> updateMatch(Match match) {
+    return _matchCollection.doc(match.id).set(match.toMap()).asStream();
+  }
+
   static Stream<Match> getMatch(String id) {
     return _matchCollection
         .doc(id)

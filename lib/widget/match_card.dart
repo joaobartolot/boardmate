@@ -59,17 +59,19 @@ class MatchCard extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  // InkWell(
-                                  //   borderRadius: BorderRadius.circular(99.0),
-                                  //   onTap: () => print('implement'),
-                                  //   child: Padding(
-                                  //     padding: const EdgeInsets.all(5.0),
-                                  //     child: Icon(
-                                  //       Icons.edit,
-                                  //       color: Theme.of(context).primaryColor,
-                                  //     ),
-                                  //   ),
-                                  // ),
+                                  InkWell(
+                                    borderRadius: BorderRadius.circular(99.0),
+                                    onTap: () => Navigator.of(context)
+                                        .pushNamed('/create_match',
+                                            arguments: match),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ),
                                   InkWell(
                                     borderRadius: BorderRadius.circular(99.0),
                                     onTap: () => MatchService.deleteMatch(

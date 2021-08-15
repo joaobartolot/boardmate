@@ -1,4 +1,5 @@
 import 'package:boardmate/model/game.dart';
+import 'package:boardmate/model/match.dart';
 import 'package:boardmate/provider/create_match.dart';
 import 'package:boardmate/service/game.dart';
 import 'package:boardmate/service/match.dart';
@@ -9,13 +10,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CreateMatchPage extends StatelessWidget {
-  const CreateMatchPage({Key? key}) : super(key: key);
+  const CreateMatchPage({
+    Key? key,
+  }) : super(key: key);
 
   // TODO: Change all the hard coded colors
   @override
   Widget build(BuildContext context) {
+    Match? match = ModalRoute.of(context)!.settings.arguments as Match?;
     return ChangeNotifierProvider<CreateMatchProvider>(
-      create: (context) => CreateMatchProvider(),
+      create: (context) => match != null
+          ? CreateMatchProvider.fromMatch(
+              playersList: match.players, winnerPlayer: match.winner)
+          : CreateMatchProvider(players: []),
       builder: (context, _) => GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: Scaffold(
@@ -66,11 +73,15 @@ class CreateMatchPage extends StatelessWidget {
                                 initialData: [],
                                 builder: (context, _) {
                                   List<Game> games =
-                                      Provider.of<List<Game>>(context);
+                                      context.watch<List<Game>>();
                                   if (games.isNotEmpty &&
-                                      provider.dropdownValueGame.isEmpty)
+                                      provider.dropdownValueGame
+                                          .isEmpty) if (match == null)
                                     provider.setDefaultDropdownValue(
                                         games.first.id);
+                                  else
+                                    provider
+                                        .setDefaultDropdownValue(match.gameId);
                                   return DropdownButton(
                                     value: provider.dropdownValueGame,
                                     isExpanded: true,
@@ -114,11 +125,9 @@ class CreateMatchPage extends StatelessWidget {
                                       disabledBorder: InputBorder.none,
                                       hintText: "Add a player",
                                     ),
-                                    controller:
-                                        Provider.of<CreateMatchProvider>(
-                                      context,
-                                      listen: false,
-                                    ).nameController,
+                                    controller: context
+                                        .read<CreateMatchProvider>()
+                                        .nameController,
                                   ),
                                 ),
                                 SizedBox(
@@ -129,10 +138,9 @@ class CreateMatchPage extends StatelessWidget {
                                   ),
                                 ),
                                 IconButton(
-                                  onPressed: Provider.of<CreateMatchProvider>(
-                                    context,
-                                    listen: false,
-                                  ).addPlayerToList,
+                                  onPressed: context
+                                      .read<CreateMatchProvider>()
+                                      .addPlayerToList,
                                   icon: Icon(Icons.add),
                                 )
                               ],
@@ -211,14 +219,29 @@ class CreateMatchPage extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: ElevatedButton(
-                                  onPressed: () => MatchService.addMatch(
-                                    Provider.of<CreateMatchProvider>(
-                                      context,
-                                      listen: false,
-                                    ).getModel(),
-                                  ).listen(
-                                    (data) => Navigator.of(context).pop(),
-                                  ),
+                                  onPressed: () {
+                                    Match newMatch = context
+                                        .read<CreateMatchProvider>()
+                                        .getModel();
+
+                                    if (match == null)
+                                      MatchService.addMatch(
+                                        newMatch,
+                                      ).listen(
+                                        (data) => Navigator.of(context).pop(),
+                                      );
+                                    else {
+                                      match.players = newMatch.players;
+                                      match.winner = newMatch.winner;
+                                      match.gameId = newMatch.gameId;
+
+                                      MatchService.updateMatch(
+                                        match,
+                                      ).listen(
+                                        (data) => Navigator.of(context).pop(),
+                                      );
+                                    }
+                                  },
                                   child: Text('Save'),
                                 ),
                               ),

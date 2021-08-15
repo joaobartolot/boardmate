@@ -1,7 +1,8 @@
-import 'package:boardmate/model/match.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+
+import 'package:boardmate/model/match.dart';
 
 class CreateMatchProvider extends ChangeNotifier {
   TextEditingController nameController = TextEditingController();
@@ -22,6 +23,19 @@ class CreateMatchProvider extends ChangeNotifier {
   }
 
   int? _winnerIndex;
+
+  CreateMatchProvider({
+    required this.players,
+  });
+
+  CreateMatchProvider.fromMatch({
+    required List<String> playersList,
+    String winnerPlayer = "",
+  }) {
+    players = playersList;
+    winnerIndex =
+        winnerPlayer.isNotEmpty ? playersList.indexOf(winnerPlayer) : null;
+  }
 
   int? get winnerIndex => _winnerIndex;
 
