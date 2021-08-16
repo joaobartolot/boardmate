@@ -1,4 +1,7 @@
 {
+  "projects": {
+    "default": "boardmate-ee67c"
+  },
   "hosting": {
     "public": "build/web",
     "ignore": [

@@ -7,6 +7,7 @@ import 'package:boardmate/widget/back_appbar_button.dart';
 import 'package:boardmate/widget/input_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
 class CreateMatchPage extends StatelessWidget {
@@ -21,7 +22,8 @@ class CreateMatchPage extends StatelessWidget {
     return ChangeNotifierProvider<CreateMatchProvider>(
       create: (context) => match != null
           ? CreateMatchProvider.fromMatch(
-              playersList: match.players, winnerPlayer: match.winner)
+              match: match,
+            )
           : CreateMatchProvider(players: []),
       builder: (context, _) => GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
@@ -103,6 +105,79 @@ class CreateMatchPage extends StatelessWidget {
                                 },
                               ),
                             ),
+                          ),
+                          SizedBox(height: 20.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InputContainer(
+                                header: Text(
+                                  'Match date:',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                child: TextButton(
+                                  onPressed: () {
+                                    showDatePicker(
+                                      context: context,
+                                      initialDate: context
+                                          .read<CreateMatchProvider>()
+                                          .gameTime,
+                                      firstDate: DateTime(2000),
+                                      lastDate: DateTime(2100),
+                                    ).then(
+                                      (value) => context
+                                          .read<CreateMatchProvider>()
+                                          .setDate(value),
+                                    );
+                                  },
+                                  child: Text(
+                                    Jiffy(context
+                                            .watch<CreateMatchProvider>()
+                                            .gameTime)
+                                        .yMMMMEEEEd,
+                                  ),
+                                ),
+                              ),
+                              InputContainer(
+                                header: Text(
+                                  'Match time:',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                child: TextButton(
+                                  onPressed: () {
+                                    showTimePicker(
+                                      context: context,
+                                      initialTime: TimeOfDay(
+                                          hour: context
+                                              .read<CreateMatchProvider>()
+                                              .gameTime
+                                              .hour,
+                                          minute: context
+                                              .read<CreateMatchProvider>()
+                                              .gameTime
+                                              .minute),
+                                    ).then(
+                                      (value) => context
+                                          .read<CreateMatchProvider>()
+                                          .setTime(value),
+                                    );
+                                  },
+                                  child: Text(
+                                    // TODO: Change the Color of the text
+                                    Jiffy(context
+                                            .watch<CreateMatchProvider>()
+                                            .gameTime)
+                                        .jm,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(height: 20.0),
                           InputContainer(
@@ -231,9 +306,7 @@ class CreateMatchPage extends StatelessWidget {
                                         (data) => Navigator.of(context).pop(),
                                       );
                                     else {
-                                      match.players = newMatch.players;
-                                      match.winner = newMatch.winner;
-                                      match.gameId = newMatch.gameId;
+                                      match.updateValues(newMatch);
 
                                       MatchService.updateMatch(
                                         match,

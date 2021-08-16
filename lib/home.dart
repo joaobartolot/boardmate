@@ -1,10 +1,7 @@
-import 'package:boardmate/model/game.dart';
 import 'package:boardmate/model/match.dart';
 import 'package:boardmate/provider/match_card.dart';
-import 'package:boardmate/service/game.dart';
 import 'package:boardmate/service/match.dart';
 import 'package:boardmate/widget/match_card.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

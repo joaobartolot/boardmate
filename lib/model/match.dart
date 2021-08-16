@@ -8,6 +8,7 @@ class Match {
   List<String> players;
   String winner;
   Timestamp createdAt;
+  Timestamp? timeMatch;
 
   Match({
     required this.id,
@@ -16,6 +17,7 @@ class Match {
     required this.players,
     required this.winner,
     required this.createdAt,
+    this.timeMatch,
   });
 
   factory Match.fromFirestore(DocumentSnapshot doc) {
@@ -30,6 +32,7 @@ class Match {
       players: players,
       winner: data['winner'] ?? '',
       createdAt: data['createdAt'] ?? Timestamp.now(),
+      timeMatch: data['timeMatch'],
     );
   }
 
@@ -42,6 +45,7 @@ class Match {
       'players': this.players,
       'winner': this.winner,
       'createdAt': this.createdAt,
+      'timeMatch': this.timeMatch,
     };
   }
 
@@ -57,5 +61,12 @@ class Match {
     }
 
     return playersStr;
+  }
+
+  void updateValues(Match newMatch) {
+    players = newMatch.players;
+    winner = newMatch.winner;
+    gameId = newMatch.gameId;
+    timeMatch = newMatch.timeMatch;
   }
 }

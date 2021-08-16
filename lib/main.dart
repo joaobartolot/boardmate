@@ -1,13 +1,18 @@
+import 'package:universal_io/io.dart';
+
 import 'package:boardmate/home.dart';
 import 'package:boardmate/create_match.dart';
 import 'package:boardmate/signin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  await Jiffy.locale(Platform.localeName.replaceAll('-', '_'));
 
   runApp(MyApp());
 }
