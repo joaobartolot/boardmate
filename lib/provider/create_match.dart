@@ -10,6 +10,33 @@ class CreateMatchProvider extends ChangeNotifier {
 
   List<String> players = [];
 
+  bool _showDropdownError = false;
+
+  bool get showDropdownError => _showDropdownError;
+
+  set showDropdownError(bool showDropdownError) {
+    _showDropdownError = showDropdownError;
+    notifyListeners();
+  }
+
+  bool _showWinnerError = false;
+
+  bool get showWinnerError => _showWinnerError;
+
+  set showWinnerError(bool showWinnerError) {
+    _showWinnerError = showWinnerError;
+    notifyListeners();
+  }
+
+  bool _showPlayersError = false;
+
+  bool get showPlayersError => _showPlayersError;
+
+  set showPlayersError(bool showPlayersError) {
+    _showPlayersError = showPlayersError;
+    notifyListeners();
+  }
+
   String _dropdownValueGame = "";
 
   String get dropdownValueGame => _dropdownValueGame;
@@ -74,9 +101,19 @@ class CreateMatchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Match getModel() {
-    if (dropdownValueGame.isEmpty || players.isEmpty || winnerIndex == null)
-      throw Exception('Something REALY BAD happened');
+  Match? getModel() {
+    if (dropdownValueGame.isEmpty) {
+      showDropdownError = true;
+      return null;
+    }
+    if (players.isEmpty) {
+      showPlayersError = true;
+      return null;
+    }
+    if (winnerIndex == null) {
+      showWinnerError = true;
+      return null;
+    }
 
     return Match(
       id: '',

@@ -28,6 +28,7 @@ class CreateMatchPage extends StatelessWidget {
       builder: (context, _) => GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             leading: BackAppBarButton(),
             title: Text('Create match'),
@@ -68,6 +69,10 @@ class CreateMatchPage extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                            errorText: 'Please select the game',
+                            validationError: context
+                                .read<CreateMatchProvider>()
+                                .showDropdownError,
                             child: Consumer<CreateMatchProvider>(
                               builder: (context, provider, _) =>
                                   StreamProvider<List<Game>>.value(
@@ -118,6 +123,8 @@ class CreateMatchPage extends StatelessWidget {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
+                                errorText: '',
+                                validationError: false,
                                 child: TextButton(
                                   onPressed: () {
                                     showDatePicker(
@@ -149,19 +156,22 @@ class CreateMatchPage extends StatelessWidget {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
+                                errorText: '',
+                                validationError: false,
                                 child: TextButton(
                                   onPressed: () {
                                     showTimePicker(
                                       context: context,
                                       initialTime: TimeOfDay(
-                                          hour: context
-                                              .read<CreateMatchProvider>()
-                                              .gameTime
-                                              .hour,
-                                          minute: context
-                                              .read<CreateMatchProvider>()
-                                              .gameTime
-                                              .minute),
+                                        hour: context
+                                            .read<CreateMatchProvider>()
+                                            .gameTime
+                                            .hour,
+                                        minute: context
+                                            .read<CreateMatchProvider>()
+                                            .gameTime
+                                            .minute,
+                                      ),
                                     ).then(
                                       (value) => context
                                           .read<CreateMatchProvider>()
@@ -170,10 +180,11 @@ class CreateMatchPage extends StatelessWidget {
                                   },
                                   child: Text(
                                     // TODO: Change the Color of the text
-                                    Jiffy(context
-                                            .watch<CreateMatchProvider>()
-                                            .gameTime)
-                                        .jm,
+                                    Jiffy(
+                                      context
+                                          .watch<CreateMatchProvider>()
+                                          .gameTime,
+                                    ).jm,
                                   ),
                                 ),
                               ),
@@ -188,22 +199,25 @@ class CreateMatchPage extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                            errorText: 'Please add a player',
+                            validationError: context
+                                .read<CreateMatchProvider>()
+                                .showPlayersError,
                             child: Row(
                               children: [
                                 Flexible(
                                   child: TextField(
-                                    decoration: new InputDecoration(
-                                      border: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      errorBorder: InputBorder.none,
-                                      disabledBorder: InputBorder.none,
-                                      hintText: "Add a player",
-                                    ),
-                                    controller: context
-                                        .read<CreateMatchProvider>()
-                                        .nameController,
-                                  ),
+                                      decoration: new InputDecoration(
+                                        border: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        errorBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
+                                        hintText: "Add a player",
+                                      ),
+                                      controller: context
+                                          .read<CreateMatchProvider>()
+                                          .nameController),
                                 ),
                                 SizedBox(
                                   width: 1.0,
@@ -295,24 +309,25 @@ class CreateMatchPage extends StatelessWidget {
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Match newMatch = context
+                                    Match? newMatch = context
                                         .read<CreateMatchProvider>()
                                         .getModel();
+                                    if (newMatch != null) {
+                                      if (match == null)
+                                        MatchService.addMatch(
+                                          newMatch,
+                                        ).listen(
+                                          (data) => Navigator.of(context).pop(),
+                                        );
+                                      else {
+                                        match.updateValues(newMatch);
 
-                                    if (match == null)
-                                      MatchService.addMatch(
-                                        newMatch,
-                                      ).listen(
-                                        (data) => Navigator.of(context).pop(),
-                                      );
-                                    else {
-                                      match.updateValues(newMatch);
-
-                                      MatchService.updateMatch(
-                                        match,
-                                      ).listen(
-                                        (data) => Navigator.of(context).pop(),
-                                      );
+                                        MatchService.updateMatch(
+                                          match,
+                                        ).listen(
+                                          (data) => Navigator.of(context).pop(),
+                                        );
+                                      }
                                     }
                                   },
                                   child: Text('Save'),
